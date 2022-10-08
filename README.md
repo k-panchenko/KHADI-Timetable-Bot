@@ -6,7 +6,7 @@
 
 ## Run
 
-1. `python pip install -r requirements.txt`
+1. `pip install -r requirements.txt`
 2. Set environment variables: `CHAT_ID` and `BOT_TOKEN`
 3. Schedule bot run in cron:
     1. `45 7 * * 1-6 python main.py` - before first lesson
