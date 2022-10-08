@@ -87,6 +87,4 @@ def main(current_time: datetime = None):
 
 
 if __name__ == '__main__':
-    main(
-        datetime(2022, 10, 8, 8, 0)  # for test
-    )
+    main()
