@@ -62,7 +62,7 @@ def find_nearest_lesson(lessons: ResultSet[Tag], current_time: datetime) -> Tupl
     return min(dates, key=lambda date: abs(current_time - date[0]))
 
 
-def send_message_to_tg_group(message: str, url: str):
+def send_message_to_tg_group(message: str, url: str = None):
     json = {
         'chat_id': environ['CHAT_ID'],
         'text': message,
@@ -81,9 +81,12 @@ def send_message_to_tg_group(message: str, url: str):
 def main(current_time: datetime = None):
     if not current_time:
         current_time = datetime.now()
-    response = get_timetable_from_server()
-    message, url = convert_response_to_message(response, current_time)
-    send_message_to_tg_group(message, url)
+    try:
+        response = get_timetable_from_server()
+        message, url = convert_response_to_message(response, current_time)
+        send_message_to_tg_group(message, url)
+    except Exception:
+        send_message_to_tg_group('Не удалось получить расписание, возможно, сервер ХНАДУ упал 🤷🏿')
 
 
 if __name__ == '__main__':
