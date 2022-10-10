@@ -25,7 +25,8 @@ def get_timetable_from_server():
         'TimeTableForm[groupId]': '1046',
     }
 
-    return requests.post('https://vuz.khadi.kharkov.ua/time-table/group', params=params, cookies=cookies, data=data)
+    return requests.post('https://vuz.khadi.kharkov.ua/time-table/group', params=params, cookies=cookies, data=data,
+                         timeout=10)
 
 
 def convert_response_to_message(response: requests.Response, current_time: datetime) -> Tuple[str, Optional[str]]:
@@ -51,7 +52,7 @@ def get_details(data_r1: str, data_r2: str) -> requests.Response:
         'X-Requested-With': 'XMLHttpRequest'
     }
 
-    return requests.get('https://vuz.khadi.kharkov.ua/time-table/show-ads', params=params, headers=headers)
+    return requests.get('https://vuz.khadi.kharkov.ua/time-table/show-ads', params=params, headers=headers, timeout=10)
 
 
 def find_nearest_lesson(lessons: ResultSet[Tag], current_time: datetime) -> Tuple[datetime, Tag, Tag]:
@@ -75,7 +76,7 @@ def send_message_to_tg_group(message: str, url: str = None):
             }
         ]]}
 
-    requests.post(f'https://api.telegram.org/bot{environ["BOT_TOKEN"]}/sendMessage', json=json)
+    requests.post(f'https://api.telegram.org/bot{environ["BOT_TOKEN"]}/sendMessage', json=json, timeout=10)
 
 
 def main(current_time: datetime = None):
