@@ -40,7 +40,8 @@ async def send_lesson_on_date(lesson: dict, date: datetime) -> None:
     clazz = await lesson_provider.get_lesson(lesson, date)
     if not clazz:
         return
-    await bot.send_message(Config.CHAT_ID, mapper.lesson_to_text(clazz), reply_markup=keyboard.lesson_url(clazz.url))
+    text = '\n'.join(['Сейчас по расписанию:', mapper.lesson_to_text(clazz)])
+    await bot.send_message(Config.CHAT_ID, text, reply_markup=keyboard.lesson_url(clazz.url))
 
 
 @aiocron.crontab(Config.START_CRON)
