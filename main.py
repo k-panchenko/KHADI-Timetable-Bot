@@ -33,12 +33,14 @@ async def send_lessons_on_date(date: datetime) -> None:
 
 
 async def send_lesson_today(lesson: dict):
+    logger.info(f'Sending lesson: {lesson}')
     await send_lesson_on_date(lesson, datetime.now())
 
 
 async def send_lesson_on_date(lesson: dict, date: datetime) -> None:
     clazz = await lesson_provider.get_lesson(lesson, date)
     if not clazz:
+        logger.info(f'Lesson not found {lesson}')
         return
     text = '\n'.join(['Сейчас по расписанию:', mapper.lesson_to_text(clazz)])
     await bot.send_message(Config.CHAT_ID, text, reply_markup=keyboard.lesson_url(clazz.url))
@@ -53,7 +55,7 @@ async def main():
     for lesson in Config.LESSONS:
         cron = lesson['cron']
         aiocron.crontab(cron, send_lesson_today, (lesson,))
-        logger.info(f'Registered job on {cron}')
+        logger.info(f'Registered job on {cron} for lesson {lesson}')
     while True:
         await asyncio.sleep(1)
 
