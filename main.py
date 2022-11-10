@@ -24,7 +24,9 @@ async def send_lessons_today() -> None:
 
 
 async def send_lessons_on_date(date: datetime) -> None:
+    logger.info(f'Searching lessons for date {date}')
     lessons = await lesson_provider.get_lessons(date)
+    logger.info(f'Lessons for date: {lessons}')
     text = 'Пары на сегодня: ' if lessons else 'Вам повезло, сегодня нет пар 🥳'
     await bot.send_message(Config.CHAT_ID, '\n'.join(['Доброе утро, блядь!', text]))
     for lesson in lessons:
@@ -46,12 +48,8 @@ async def send_lesson_on_date(lesson: dict, date: datetime) -> None:
     await bot.send_message(Config.CHAT_ID, text, reply_markup=keyboard.lesson_url(clazz.url))
 
 
-@aiocron.crontab(Config.START_CRON)
-async def start_cron():
-    await send_lessons_today()
-
-
 async def main():
+    aiocron.crontab(Config.START_CRON, send_lessons_today)
     for lesson in Config.LESSONS:
         cron = lesson['cron']
         aiocron.crontab(cron, send_lesson_today, (lesson,))
@@ -66,3 +64,4 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         logger.info('Goodbye!')
         exit(0)
+
