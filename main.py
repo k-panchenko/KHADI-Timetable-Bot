@@ -10,7 +10,7 @@ from config.config import Config
 from provider.lesson_provider import LessonProvider
 from utils import keyboard, mapper
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='[%(asctime)s: %(levelname)s] %(message)s')
 logger = logging.getLogger(__name__)
 
 bot = Bot(Config.BOT_TOKEN)
