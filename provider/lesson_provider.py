@@ -41,4 +41,7 @@ class LessonProvider:
         details = await self._khadi_client.get_details(*datas)
         details_soup = BeautifulSoup(details, 'html.parser')
         link_tag = details_soup.find('a')
-        return Lesson(lesson['name'], lesson['start'], lesson['end'], lesson_tag.text.strip(), link_tag.text, None)
+        info = lesson_tag.text.strip()
+        add_info_tag = next(filter(lambda l: l.name == 'p', link_tag.next_elements), None)
+        add_info = add_info_tag.text if add_info_tag else None
+        return Lesson(lesson['name'], lesson['start'], lesson['end'], info, link_tag.text, add_info)
